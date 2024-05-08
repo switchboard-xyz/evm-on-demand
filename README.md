@@ -58,7 +58,13 @@ To design a Switchboard On-Demand feed, you can use the [On-Demand Builder](http
 Here's an example of creating a feed for querying ETH/USDC on Binance:
 
 ```ts
-import { createJob, simulateJob } from "@switchboard-xyz/on-demand";
+import {
+  createJob,
+  simulateJob,
+  getDevnetQueue,
+} from "@switchboard-xyz/on-demand";
+
+// ...
 
 const job = createJob({
   tasks: [
@@ -71,7 +77,7 @@ const job = createJob({
   ],
 });
 
-const result = await simulateJob(job);
+const result = await simulateJob(job, await getDevnetQueue());
 console.log(result); // Job's output price, feedId (derived from Job Definition, and Switchboard Queue ID)
 ```
 
