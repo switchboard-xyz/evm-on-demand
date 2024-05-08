@@ -10,9 +10,11 @@ Documentation and examples for using Switchboard On-Demand on Ethereum Virtual M
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+    - [Forge (Optional)](#forge-optional)
 - [Usage](#usage)
-  - [Creating a Switchboard On-Demand Job](#creating-a-switchboard-on-demand-job)
-  - [Querying a Switchboard On-Demand Job](#querying-a-switchboard-on-demand-job)
+  - [Designing a Switchboard On-Demand Feed](#designing-a-switchboard-on-demand-feed)
+  - [Solidity](#solidity)
+  - [Getting the Encoded Updates](#getting-the-encoded-updates)
 
 ## Overview
 
