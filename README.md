@@ -204,4 +204,4 @@ const feedId = update.feedId;
 const update = update.encoded;
 ```
 
-See [the examples](https://TODO.com) for end-to-end examples.
+See [the examples](https://TODO.com) for an end-to-end implementation.
