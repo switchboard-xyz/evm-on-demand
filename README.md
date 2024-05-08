@@ -1,6 +1,6 @@
 # Switchboard On-Demand on EVM
 
-## NOTICE: Switchboard On-Demand on EVM is currently an unaudited alpha. Please use at your own risk.
+## NOTICE: Switchboard On-Demand on EVM is currently an unaudited alpha. Use at your own risk.
 
 Documentation and examples for using Switchboard On-Demand on Ethereum Virtual Machine (EVM) Networks. With Switchboard On-Demand, users can customize and create low-latency data feeds from any source.
 
@@ -82,7 +82,7 @@ The code below shows the flow for leveraging Switchboard feeds in Solidity.
 ```solidity
 pragma solidity ^0.8.0;
 
-import {IStructs} from "@switchboard-xyz/on-demand-solidity/ISwitchboard.sol";
+import {ISwitchboard} from "@switchboard-xyz/on-demand-solidity/ISwitchboard.sol";
 import {Structs} from "@@switchboard-xyz/on-demand-solidity/Structs.sol";
 
 contract Example {
@@ -165,8 +165,8 @@ To get the encoded updates for the feed, you can use the Switchboard Typescript 
 ```ts
 import {
   createJob,
-  getDevnetQueue, // Get the Switchboard Devnet Queue
-  fetchUpdateData, // Fetch the latest update data
+  getDevnetQueue,
+  fetchUpdateData,
 } from "@switchboard-xyz/on-demand";
 
 // Create a Switchboard On-Demand job
