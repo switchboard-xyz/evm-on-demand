@@ -1,4 +1,16 @@
+<div align="center">
+
+![Switchboard Logo](https://github.com/switchboard-xyz/sbv2-core/raw/main/website/static/img/icons/switchboard/avatar.png)
+
 # Switchboard On-Demand on EVM
+
+> A collection of libraries and examples for interacting with Switchboard on EVM
+> chains.
+
+<!--
+[![NPM Badge](https://img.shields.io/github/package-json/v/switchboard-xyz/sbv2-evm?color=red&filename=javascript%2Fevm.js%2Fpackage.json&label=%40switchboard-xyz%2Fevm.js&logo=npm)](https://www.npmjs.com/package/@switchboard-xyz/evm.js) -->
+
+</div>
 
 ## NOTICE: Switchboard On-Demand on EVM is currently an unaudited alpha. Use at your own risk.
 
