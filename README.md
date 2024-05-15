@@ -16,6 +16,11 @@
 
 Documentation and examples for using Switchboard On-Demand on Ethereum Virtual Machine (EVM) Networks. With Switchboard On-Demand, users can customize and create low-latency data feeds from any source.
 
+## Current Deployments
+
+- Morph Holesky: [0x81C4C9c9B81F8B02155e3F20c274132B125B07FB](https://explorer-holesky.morphl2.io/address/0x81C4C9c9B81F8B02155e3F20c274132B125B07FB)
+- Arbitrum Sepolia: [0xdAAa076CbA0FF614d584605A74cD702334a28088](https://sepolia.arbiscan.io/address/0xdAAa076CbA0FF614d584605A74cD702334a28088)
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -36,7 +41,7 @@ Switchboard On-Demand is a decentralized oracle service that allows users to cre
 
 To get started with Switchboard On-Demand, you will need to install the Switchboard CLI and set up a Switchboard account. You can then create a Switchboard On-Demand job and query the oracle to get the data.
 
-There's a [Solidity-SDK](https://TODO.com) that you can use to interact with the oracle contract on-chain and leverage customized oracle data within your smart contracts. For querying oracle updates off-chain for on-chain submission, you can use the [Switchboard On-Demand Typescript-SDK](https://TODO.com).
+There's a [Solidity-SDK](https://github.com/switchboard-xyz/evm-on-demand) that you can use to interact with the oracle contract on-chain and leverage customized oracle data within your smart contracts. For querying oracle updates off-chain for on-chain submission, you can use the [Switchboard On-Demand Typescript-SDK](https://www.npmjs.com/package/@switchboard-xyz/on-demand/v/1.0.54-alpha.3).
 
 ### Prerequisites
 
@@ -47,13 +52,13 @@ To use Switchboard On-Demand, you will need to have a basic understanding of Eth
 You can install the Switchboard On-Demand Solidity SDK by running:
 
 ```bash
-npm install @switchboard-xyz/on-demand-solidity
+npm install @switchboard-xyz/on-demand-solidity@0.0.1
 ```
 
 And you can install the cross-chain Typescript SDK by running:
 
 ```bash
-npm install @switchboard-xyz/on-demand
+npm install @switchboard-xyz/on-demand@1.0.54-alpha.3
 ```
 
 #### Forge (Optional)
@@ -65,7 +70,7 @@ If you're using Forge, add following to your remappings.txt file:
 
 ### Designing a Switchboard On-Demand Feed
 
-To design a Switchboard On-Demand feed, you can use the [On-Demand Builder](https://TODO.com). Switchboard Feeds are created by specifying data sources and aggregation methods in an [OracleJob](https://docs.switchboard.xyz/api/next/protos/OracleJob) format.
+To design a Switchboard On-Demand feed, you can use the [On-Demand Builder](https://app.switchboard.xyz/solana/mainnet). Switchboard Feeds are created by specifying data sources and aggregation methods in an [OracleJob](https://docs.switchboard.xyz/api/next/protos/OracleJob) format.
 
 Here's an example of creating a feed for querying ETH/USDC on Binance:
 
@@ -89,7 +94,14 @@ const job = createJob({
   ],
 });
 
-const result = await simulateJob(job, await getDevnetQueue());
+// Get the latest update data for the feed
+const result = await simulateFeed({
+  // Within feeds you can have multiple jobs, the final result will be the median of all jobs
+  jobs: [job],
+  // Here we'll use devnet because we're going to be using a non-prod network
+  queue: await getDevnetQueue(),
+});
+
 console.log(result); // Job's output price, feedId (derived from Job Definition, and Switchboard Queue ID)
 ```
 
@@ -124,9 +136,9 @@ contract Example {
    */
   constructor(address _switchboard, bytes32 _feedId) {
     // Initialize the target _switchboard
-    // Get the existing Switchboard contract address on your preferred network from the Switchboard Docs at: https://TODO.com
+    // Get the existing Switchboard contract address on your preferred network from the Switchboard Docs
     switchboard = ISwitchboard(_switchboard);
-    feedId = _feedId; //
+    feedId = _feedId;
   }
 
   /**
@@ -205,8 +217,6 @@ const update = await getFeedUpdateData({
   jobs: [job],
   // The Switchboard Queue to use
   queue: await getDevnetQueue(),
-  // The Switchboard Contract Address, which can be found at https://TODO.com for your preferred network
-  contract: "0x1234567890123456789012345678901234567890",
 });
 
 // `bytes32` string of the feed ID, ex: 0x0f762b759dca5b4421fba1cf6fba452cdf76fb9cc6d8183722a78358a8339d10
@@ -216,4 +226,4 @@ const feedId = update.feedId;
 const update = update.encoded;
 ```
 
-See [the examples](https://TODO.com) for an end-to-end implementation.
+<!-- See [the examples](https://TODO.com) for an end-to-end implementation. -->

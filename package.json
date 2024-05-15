@@ -1,0 +1,18 @@
+{
+  "name": "@switchboard-xyz/on-demand-solidity",
+  "version": "0.0.1",
+  "description": "Switchboard Solidity SDK",
+  "keywords": [
+    "switchboard",
+    "on-demand",
+    "solidity",
+    "oracle",
+    "evm"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/switchboard-xyz/evm-on-demand"
+  },
+  "license": "MIT",
+  "author": "albert@switchboard.xyz"
+}
