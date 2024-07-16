@@ -12,14 +12,17 @@
 
 </div>
 
-## NOTICE: Switchboard On-Demand on EVM is currently an unaudited alpha. Use at your own risk.
+## NOTE: Switchboard On-Demand on EVM is currently an unaudited alpha. Use at your own risk.
 
 Documentation and examples for using Switchboard On-Demand on Ethereum Virtual Machine (EVM) Networks. With Switchboard On-Demand, users can customize and create low-latency data feeds from any source.
 
 ## Current Deployments
 
-- Morph Holesky: [0x81C4C9c9B81F8B02155e3F20c274132B125B07FB](https://explorer-holesky.morphl2.io/address/0x81C4C9c9B81F8B02155e3F20c274132B125B07FB)
-- Arbitrum Sepolia: [0xdAAa076CbA0FF614d584605A74cD702334a28088](https://sepolia.arbiscan.io/address/0xdAAa076CbA0FF614d584605A74cD702334a28088)
+Core Mainnet: [0x33A5066f65f66161bEb3f827A3e40fce7d7A2e6C](https://scan.coredao.org/address/0x33A5066f65f66161bEb3f827A3e40fce7d7A2e6C)
+Core Testnet: [0x2f833D73bA1086F3E5CDE9e9a695783984636A76](https://scan.test.btcs.network/address/0x2f833D73bA1086F3E5CDE9e9a695783984636A76)
+Arbitrum Sepolia: [0xa2a0425fa3c5669d384f4e6c8068dfcf64485b3b](https://sepolia.arbiscan.io/address/0xa2a0425fa3c5669d384f4e6c8068dfcf64485b3b)
+Arbitrum One: [0xad9b8604b6b97187cde9e826cdeb7033c8c37198](https://arbiscan.io/address/0xad9b8604b6b97187cde9e826cdeb7033c8c37198)
+Morph Holesky: [0x3c1604DF82FDc873D289a47c6bb07AFA21f299e5](https://explorer-holesky.morphl2.io/address/0x3c1604DF82FDc873D289a47c6bb07AFA21f299e5)
 
 ## Table of Contents
 
@@ -41,7 +44,7 @@ Switchboard On-Demand is a decentralized oracle service that allows users to cre
 
 To get started with Switchboard On-Demand, you will need to install the Switchboard CLI and set up a Switchboard account. You can then create a Switchboard On-Demand job and query the oracle to get the data.
 
-There's a [Solidity-SDK](https://github.com/switchboard-xyz/evm-on-demand) that you can use to interact with the oracle contract on-chain and leverage customized oracle data within your smart contracts. For querying oracle updates off-chain for on-chain submission, you can use the [Switchboard On-Demand Typescript-SDK](https://www.npmjs.com/package/@switchboard-xyz/on-demand/v/1.0.54-alpha.3).
+There's a [Solidity-SDK](https://github.com/switchboard-xyz/evm-on-demand) that you can use to interact with the oracle contract on-chain and leverage customized oracle data within your smart contracts. For querying oracle updates off-chain for on-chain submission, you can use the [Switchboard On-Demand Typescript-SDK](https://www.npmjs.com/package/@switchboard-xyz/on-demand).
 
 ### Prerequisites
 
@@ -52,13 +55,13 @@ To use Switchboard On-Demand, you will need to have a basic understanding of Eth
 You can install the Switchboard On-Demand Solidity SDK by running:
 
 ```bash
-npm install @switchboard-xyz/on-demand-solidity@0.0.1
+npm install @switchboard-xyz/on-demand-solidity
 ```
 
 And you can install the cross-chain Typescript SDK by running:
 
 ```bash
-npm install @switchboard-xyz/on-demand@1.0.54-alpha.3
+npm install @switchboard-xyz/on-demand
 ```
 
 #### Forge (Optional)
@@ -113,7 +116,7 @@ The code below shows the flow for leveraging Switchboard feeds in Solidity.
 pragma solidity ^0.8.0;
 
 import {ISwitchboard} from "@switchboard-xyz/on-demand-solidity/ISwitchboard.sol";
-import {Structs} from "@@switchboard-xyz/on-demand-solidity/Structs.sol";
+import {Structs} from "@@switchboard-xyz/on-demand-solidity/structs/Structs.sol";
 
 contract Example {
   ISwitchboard switchboard;
@@ -193,37 +196,44 @@ This contract:
 To get the encoded updates for the feed, you can use the Switchboard Typescript SDK. Here's an example of how to get the encoded updates:
 
 ```ts
-import {
-  createJob,
-  getDevnetQueue,
-  fetchUpdateData,
-} from "@switchboard-xyz/on-demand";
+import * as ethers from "ethers";
+
+interface OracleData {
+  oracle_pubkey: string;
+  queue_pubkey: string;
+  oracle_signing_pubkey: string;
+  feed_hash: string;
+  recent_hash: string;
+  failure_error: string;
+  success_value: string;
+  msg: string;
+  signature: string;
+  recovery_id: number;
+  recent_successes_if_failed: any[];
+  timestamp: number;
+  result: number;
+}
+
+interface FeedResponse {
+  encoded: string[];
+  results: OracleData[];
+}
 
 // Create a Switchboard On-Demand job
-const job = createJob({
-  tasks: [
-    {
-      httpTask: "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT",
-    },
-    {
-      jsonParseTask: "$.price",
-    },
-  ],
-});
+const results = await fetch(
+  "https://crossbar.switchboard.xyz/updates/evm/1116/0xfd2b067707a96e5b67a7500e56706a39193f956a02e9c0a744bf212b19c7246c"
+);
 
-// Get the latest update data for the feed
-const update = await getFeedUpdateData({
-  // Within feeds you can have multiple jobs, the final result will be the median of all jobs
-  jobs: [job],
-  // The Switchboard Queue to use
-  queue: await getDevnetQueue(),
-});
+// Target contract address
+const exampleAddress = "0xc65f0acf9df6b4312d3f3ce42a778767b3e66b8a";
 
-// `bytes32` string of the feed ID, ex: 0x0f762b759dca5b4421fba1cf6fba452cdf76fb9cc6d8183722a78358a8339d10
-const feedId = update.feedId;
+// for tokens (this is the Human-Readable ABI format)
+const abi = ["function getFeedData(bytes[] calldata updates) public payable"];
 
-// `bytes` string of the encoded update for the feed which can be used in your contract
-const update = update.encoded;
+// ... Setup ethers provider ...
+
+// The Contract object
+const exampleContract = new ethers.Contract(exampleAddress, abi, provider);
 ```
 
 <!-- See [the examples](https://TODO.com) for an end-to-end implementation. -->

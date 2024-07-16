@@ -1,6 +1,6 @@
 {
   "name": "@switchboard-xyz/on-demand-solidity",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Switchboard Solidity SDK",
   "keywords": [
     "switchboard",
