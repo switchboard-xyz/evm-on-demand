@@ -73,45 +73,6 @@ npm install @switchboard-xyz/on-demand
 If you're using Forge, add following to your remappings.txt file:
 @switchboard-xyz/on-demand-solidity/=node_modules/@switchboard-xyz/on-demand-solidity
 
-## Usage
-
-### Designing a Switchboard On-Demand Feed
-
-To design a Switchboard On-Demand feed, you can use the [On-Demand Builder](https://app.switchboard.xyz/solana/mainnet). Switchboard Feeds are created by specifying data sources and aggregation methods in an [OracleJob](https://docs.switchboard.xyz/api/next/protos/OracleJob) format.
-
-Here's an example of creating a feed for querying ETH/USDC on Binance:
-
-```ts
-import {
-  createJob,
-  simulateJob,
-  getDevnetQueue,
-} from "@switchboard-xyz/on-demand";
-
-// ...
-
-const job = createJob({
-  tasks: [
-    {
-      httpTask: "https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDC",
-    },
-    {
-      jsonParseTask: "$.price",
-    },
-  ],
-});
-
-// Get the latest update data for the feed
-const result = await simulateFeed({
-  // Within feeds you can have multiple jobs, the final result will be the median of all jobs
-  jobs: [job],
-  // Here we'll use devnet because we're going to be using a non-prod network
-  queue: await getDevnetQueue(),
-});
-
-console.log(result); // Job's output price, feedId (derived from Job Definition, and Switchboard Queue ID)
-```
-
 ### Solidity
 
 The code below shows the flow for leveraging Switchboard feeds in Solidity.
