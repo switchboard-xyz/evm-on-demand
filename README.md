@@ -197,6 +197,7 @@ To get the encoded updates for the feed, you can use the Switchboard Typescript 
 
 ```ts
 import * as ethers from "ethers";
+import * as fs from "fs";
 
 interface OracleData {
   oracle_pubkey: string;
@@ -224,16 +225,38 @@ const results = await fetch(
   "https://crossbar.switchboard.xyz/updates/evm/1116/0xfd2b067707a96e5b67a7500e56706a39193f956a02e9c0a744bf212b19c7246c"
 );
 
+const { encoded }: FeedResponse = await results.json();
+
+// Parse the response as JSON
+const secret = fs.readFileSync(".secret", "utf-8");
+
+// Create a provider
+const provider = new ethers.JsonRpcProvider(
+  // "https://arb-sepolia.g.alchemy.com/v2/_R42-0YT99H8TzoENEZgSDHsDTiBOUPb"
+  // "https://rpc-holesky.morphl2.io"
+  "https://rpc.test.btcs.network"
+  // "https://rpc.coredao.org"
+);
+
+// Create a signer
+const signerWithProvider = new ethers.Wallet(secret, provider);
+
 // Target contract address
 const exampleAddress = "0xc65f0acf9df6b4312d3f3ce42a778767b3e66b8a";
 
 // for tokens (this is the Human-Readable ABI format)
 const abi = ["function getFeedData(bytes[] calldata updates) public payable"];
 
-// ... Setup ethers provider ...
-
 // The Contract object
 const exampleContract = new ethers.Contract(exampleAddress, abi, provider);
+
+// Update the contract
+const tx = await exampleContract.getFeedData(encoded);
+
+// Wait for the transaction to settle
+await tx.wait();
+
+console.log("Transaction mined!");
 ```
 
 <!-- See [the examples](https://TODO.com) for an end-to-end implementation. -->
