@@ -256,6 +256,7 @@ const tx = await exampleContract.getFeedData(encoded);
 // Wait for the transaction to settle
 await tx.wait();
 
+// Log the transaction hash
 console.log("Transaction mined!");
 ```
 
