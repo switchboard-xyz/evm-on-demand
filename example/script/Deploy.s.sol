@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// forge script script/Deploy.s.sol:DeployScript --rpc-url $RPC --broadcast -vv 
-// forge script script/Deploy.s.sol:DeployScript --rpc-url https://rpc-holesky.morphl2.io --broadcast -vv 
-// forge script script/Deploy.s.sol:DeployScript --rpc-url https://rpc.test.btcs.network --broadcast -vv --legacy
-// forge script script/Deploy.s.sol:DeployScript --rpc-url https://rpc.coredao.org/ --broadcast -vv --legacy
+// forge script script/Deploy.s.sol:DeployScript --rpc-url https://sepolia-rollup.arbitrum.io/rpc --broadcast -vv
 
 import "forge-std/Script.sol";
 import {Example} from "../src/Example.sol";
@@ -20,17 +17,14 @@ contract DeployScript is Script {
         // read env variables and choose EOA for transaction signing
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
+        // Get the Aggregator ID
+        bytes32 aggregatorId = vm.envBytes32("AGGREGATOR_ID");
+
         // Arbitrum Sepolia Switchboard Address
         address switchboard = 0xA2a0425fA3C5669d384f4e6c8068dfCf64485b3b;
 
         // Get Switchboard
         ISwitchboard sb = ISwitchboard(switchboard);
-
-        // Get the ID
-        bytes32 aggregatorId = bytes32(
-            0x755c0da00f939b04266f3ba3619ad6498fb936a8bfbfac27c9ecd4ab4c5d4878
-        );
-
         // Get the Aggregator
         (Structs.Aggregator memory aggregator, ) = sb.getAggregator(
             aggregatorId
@@ -78,9 +72,10 @@ contract DeployScript is Script {
 
             // Arbitrum Sepolia: UNI / USD (0x755...d4878)
             // https://beta.ondemand.switchboard.xyz/arbitrum/sepolia/feed/0x755c0da00f939b04266f3ba3619ad6498fb936a8bfbfac27c9ecd4ab4c5d4878
-
             aggregatorId
         );
+
+        vm.setEnv("EXAMPLE_ADDRESS", vm.toString(address(example)));
         vm.stopBroadcast();
     }
 }

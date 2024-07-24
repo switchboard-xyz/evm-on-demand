@@ -160,68 +160,91 @@ This contract:
 To get the encoded updates for the feed, you can use the Switchboard Typescript SDK. Here's an example of how to get the encoded updates:
 
 ```ts
+/* Example Using Crossbar (equivalent to index.ts) */
 import * as ethers from "ethers";
 import * as fs from "fs";
-
-interface OracleData {
-  oracle_pubkey: string;
-  queue_pubkey: string;
-  oracle_signing_pubkey: string;
-  feed_hash: string;
-  recent_hash: string;
-  failure_error: string;
-  success_value: string;
-  msg: string;
-  signature: string;
-  recovery_id: number;
-  recent_successes_if_failed: any[];
-  timestamp: number;
-  result: number;
-}
-
-interface FeedResponse {
-  encoded: string[];
-  results: OracleData[];
-}
-
-// Create a Switchboard On-Demand job
-const results = await fetch(
-  "https://crossbar.switchboard.xyz/updates/evm/1116/0xfd2b067707a96e5b67a7500e56706a39193f956a02e9c0a744bf212b19c7246c"
-);
-
-const { encoded }: FeedResponse = await results.json();
+import { CrossbarClient } from "@switchboard-xyz/on-demand";
 
 // Parse the response as JSON
 const secret = fs.readFileSync(".secret", "utf-8");
 
 // Create a provider
 const provider = new ethers.JsonRpcProvider(
-  // "https://arb-sepolia.g.alchemy.com/v2/_R42-0YT99H8TzoENEZgSDHsDTiBOUPb"
-  // "https://rpc-holesky.morphl2.io"
-  "https://rpc.test.btcs.network"
-  // "https://rpc.coredao.org"
+  "https://sepolia-rollup.arbitrum.io/rpc"
 );
 
 // Create a signer
 const signerWithProvider = new ethers.Wallet(secret, provider);
 
 // Target contract address
-const exampleAddress = "<YOUR_EXAMPLE_CONTRACT>";
+const exampleAddress = "0x4ED8171dB9eC85ee785e34AFBeFcAB539dbE2790";
 
 // for tokens (this is the Human-Readable ABI format)
-const abi = ["function getFeedData(bytes[] calldata updates) public payable"];
+const abi = [
+  "function getFeedData(bytes[] calldata updates) public payable",
+  "function aggregatorId() public view returns (bytes32)",
+];
+
+const crossbar = new CrossbarClient(`https://crossbar.switchboard.xyz`);
 
 // The Contract object
-const exampleContract = new ethers.Contract(exampleAddress, abi, provider);
+const exampleContract = new ethers.Contract(
+  exampleAddress,
+  abi,
+  signerWithProvider
+);
 
-// Update the contract
+// Get the encoded updates
+const { encoded } = await crossbar.fetchEVMResults({
+  chainId: 421614,
+  aggregatorIds: [await exampleContract.aggregatorId()],
+});
+
+// Update the contract + do some business logic
 const tx = await exampleContract.getFeedData(encoded);
 
-// Wait for the transaction to settle
-await tx.wait();
+console.log(tx);
 
 // Log the transaction hash
-console.log("Transaction mined!");
+console.log("Transaction completed!");
 ```
 
-<!-- See [the examples](https://TODO.com) for an end-to-end implementation. -->
+# Running the Example
+
+### Prerequisites
+
+1. [Install Forge](https://book.getfoundry.sh/getting-started/installation)
+2. [Install Bun](https://bun.sh/) for running the example typescript script
+3. Pick an Aggregator ID, the Address from a Switchboard feed, and set it to the ENV variable `AGGREGATOR_ID` (e.g., `export AGGREGATOR_ID=0x...`). You can create a Feed or find one in the [Switchboard Explorer](https://beta.ondemand.switchboard.xyz/arbitrum/sepolia)
+4. Setup an Arbitrum Sepolia Testnet wallet with funding
+
+### Running the Example
+
+To run the [example](/example), you will need to:
+
+1. Install the dependencies:
+
+```bash
+bun install
+```
+
+2. Run Forge install:
+
+```bash
+forge install
+```
+
+3. Set the test wallet's private key to ENV variable `PRIVATE_KEY` (e.g., `export PRIVATE_KEY=0x...`)
+
+4. Run the script to deploy the example contract:
+
+```bash
+# this sets the Example Contract address to the ENV variable `EXAMPLE_ADDRESS`
+forge script script/Deploy.s.sol:DeployScript --rpc-url https://sepolia-rollup.arbitrum.io/rpc --broadcast -vv
+```
+
+5. Run the script to update the feed:
+
+```bash
+bun run index.ts
+```
