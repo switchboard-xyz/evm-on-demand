@@ -1,2 +1,4 @@
 @switchboard-xyz/on-demand-solidity/=node_modules/@switchboard-xyz/on-demand-solidity
-
+forge-gas-snapshot/=lib/forge-gas-snapshot/src/
+forge-std/=lib/forge-std/src/
+solidity-stringutils/=lib/solidity-stringutils/src/

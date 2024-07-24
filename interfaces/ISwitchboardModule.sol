@@ -6,7 +6,7 @@ import {Structs} from "../structs/Structs.sol";
 // -- Switchboard: the main contract for the Switchboard protocol  --
 interface ISwitchboardModule {
     event FeedUpdate(
-        bytes32 indexed feedId,
+        bytes32 indexed aggregatorId,
         bytes32 indexed oracleId,
         uint256 timestamp,
         int128 result
@@ -30,11 +30,11 @@ interface ISwitchboardModule {
      * @dev Reverts if the feed does not exist
      * @dev Reverts if the feed does not have a valid update within queue (or aggregator's) tolerated delta
      * @dev Reverts if the feed does not have the minimum number of valid responses
-     * @param feedId The identifier for the feed to get the latest update for
+     * @param aggregatorId The identifier for the feed to get the latest update for
      * @return Update The latest update for the given feed
      */
     function latestUpdate(
-        bytes32 feedId
+        bytes32 aggregatorId
     ) external view returns (Structs.Update memory);
 
     /**

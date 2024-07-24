@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@switchboard-xyz/on-demand": "^1.2.11",
     "@switchboard-xyz/on-demand-solidity": "^0.0.4",
     "ethers": "^6.13.1"
   }
