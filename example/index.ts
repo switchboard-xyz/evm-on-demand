@@ -24,7 +24,7 @@ const exampleAddress = process.env.EXAMPLE_ADDRESS as string;
 const abi = [
   "function getFeedData(bytes[] calldata updates) public payable",
   "function aggregatorId() public view returns (bytes32)",
-  "function result() public view returns (int256)",
+  "function latestPrice() public view returns (int256)",
 ];
 
 const crossbar = new CrossbarClient(`https://crossbar.switchboard.xyz`);
@@ -51,4 +51,4 @@ console.log(tx);
 console.log("Transaction completed!");
 
 // Log the result
-console.log("Value stored in contract: ", await exampleContract.result());
+console.log("Value stored in contract: ", await exampleContract.latestPrice());
