@@ -222,29 +222,36 @@ console.log("Transaction completed!");
 
 To run the [example](/example), you will need to:
 
-1. Install the dependencies:
+1. Clone the repository and navigate to Example:
+
+```bash
+git clone https://github.com/switchboard-xyz/evm-on-demand
+cd evm-on-demand/example
+```
+
+2. Install the dependencies:
 
 ```bash
 bun install
 ```
 
-2. Run Forge install:
+3. Run Forge install:
 
 ```bash
 forge install
 ```
 
-3. Set the test wallet's private key to ENV variable `PRIVATE_KEY` (e.g., `export PRIVATE_KEY=0x...`)
+4. Set the test wallet's private key to ENV variable `PRIVATE_KEY` (e.g., `export PRIVATE_KEY=0x...`)
 
-4. Run the script to deploy the example contract:
+5. Run the script to deploy the example contract:
 
 ```bash
 forge script script/Deploy.s.sol:DeployScript --rpc-url https://sepolia-rollup.arbitrum.io/rpc --broadcast -vv
 ```
 
-5. Set the Contract Address from the deployment to ENV variable `EXAMPLE_ADDRESS` (e.g., `export EXAMPLE_ADDRESS=0x...`)
+6. Set the Contract Address from the deployment to ENV variable `EXAMPLE_ADDRESS` (e.g., `export EXAMPLE_ADDRESS=0x...`)
 
-6. Run the script to update the feed:
+7. Run the script to update the feed:
 
 ```bash
 bun run index.ts
