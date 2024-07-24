@@ -239,11 +239,12 @@ forge install
 4. Run the script to deploy the example contract:
 
 ```bash
-# this sets the Example Contract address to the ENV variable `EXAMPLE_ADDRESS`
 forge script script/Deploy.s.sol:DeployScript --rpc-url https://sepolia-rollup.arbitrum.io/rpc --broadcast -vv
 ```
 
-5. Run the script to update the feed:
+5. Set the Contract Address from the deployment to ENV variable `EXAMPLE_ADDRESS` (e.g., `export EXAMPLE_ADDRESS=0x...`)
+
+6. Run the script to update the feed:
 
 ```bash
 bun run index.ts
