@@ -12,8 +12,6 @@
 
 </div>
 
-## NOTE: Switchboard On-Demand on EVM is currently an unaudited alpha. Use at your own risk.
-
 Documentation and examples for using Switchboard On-Demand on Ethereum Virtual Machine (EVM) Networks. With Switchboard On-Demand, users can customize and create low-latency data feeds from any source.
 
 ## Current Deployments
